@@ -1,0 +1,30 @@
+#!/bin/sh
+set -eu
+task_bundle_root=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+cd "$task_bundle_root"
+export SPEARHEAD_APPDIR="$task_bundle_root"
+export LD_LIBRARY_PATH="$task_bundle_root/usr/lib"
+export QT_PLUGIN_PATH="$task_bundle_root/usr/plugins"
+export QML_IMPORT_PATH="$task_bundle_root/usr/qml"
+export QML2_IMPORT_PATH="$task_bundle_root/usr/qml"
+export QT_QUICK_BACKEND=software
+export QT_QUICK_CONTROLS_STYLE=Basic
+export QT_QPA_PLATFORMTHEME=generic
+export QT_STYLE_OVERRIDE=Fusion
+export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-xcb}"
+unset LD_PRELOAD SPEARHEAD_PYTHON PYTHONHOME PYTHONPATH GI_TYPELIB_PATH
+if [ -z "${FONTCONFIG_FILE:-}" ] && [ ! -r /etc/fonts/fonts.conf ]; then
+    export FONTCONFIG_FILE="$task_bundle_root/usr/share/fonts.conf"
+fi
+export XDG_DATA_DIRS="$task_bundle_root/usr/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+export PATH="$task_bundle_root/usr/bin:$PATH"
+if [ "${1:-}" = --runtime-check ]; then
+    export QT_QPA_PLATFORM=offscreen
+    exec "$task_bundle_root/usr/lib/spearhead/spearhead-desktop" --runtime-check
+fi
+if [ "${1:-}" = --runtime-test ]; then
+    shift
+    export LD_LIBRARY_PATH="$task_bundle_root/usr/lib:${SPEARHEAD_TEST_LIBRARY_PATH:-}"
+    exec "$@"
+fi
+exec "$task_bundle_root/usr/lib/spearhead/spearhead" "$@"
