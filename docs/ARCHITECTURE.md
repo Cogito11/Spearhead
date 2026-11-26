@@ -98,7 +98,7 @@ runtime dependencies with distribution license/source notices. The `.deb`
 declares Qt runtime dependencies. Neither contains Python, GTK or WebKit.
 
 The build runs Go race/vet checks, native API/UI tests, read-once/session privacy,
-streamed file integrity, pending-action races, sixty logo repaint checks, twenty-six
+streamed file integrity, pending-action races, sixty logo repaint checks, thirty
 native-versus-packaged screenshot comparisons, edge-gesture and narrow-navigation
 regressions, and production tray lifecycle checks in FUSE/extract modes. Packaged
 checks exercise both default background close and full shutdown after opting out. Logs, images and memory measurements stay under

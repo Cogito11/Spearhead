@@ -12,9 +12,10 @@ and separate from their broadcast name. The details pane includes device,
 platform, last online time, address, identity words, and editable notes.
 
 The sidebar search filters the selected list; its clear button restores the
-list. In a conversation, Ctrl+F opens the floating message search. Escape or the
-round close button closes it. Clicking the search button again also closes it;
-clicking the sidebar selector again closes its menu. Right-click a conversation to view its contact;
+list. In a conversation, Ctrl+F or the search button in the top bar opens the
+message search beside it, and the button becomes a close (×) button. Escape or
+that close button closes the search; clicking the sidebar selector again closes
+its menu. Right-click a conversation to view its contact;
 right-click a message to copy text or delete your local copy. Local deletion
 also cancels queued retries, but cannot delete a copy already delivered elsewhere.
 

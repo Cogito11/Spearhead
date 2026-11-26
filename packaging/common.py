@@ -20,8 +20,13 @@ DOCUMENTS = (
     "docs/USAGE.md",
     "docs/ARCHITECTURE.md",
 )
-RUNTIME_HASH = "156f4bdbde9c52d01814600013e0a273f0118dc2de98975f3c8c63427ec79074"
-RUNTIME_SOURCE = "https://github.com/AppImage/type2-runtime/tree/8f39b89"
+# Pin the runtime to an immutable, dated upstream release. The "continuous"
+# release is overwritten on every upstream commit, so its bytes can never match
+# a fixed hash for long and would break the build whenever upstream publishes.
+RUNTIME_TAG = "20251108"
+RUNTIME_COMMIT = "dd6cebedcbddde9c82f89b011e8e1d40b6e43868"
+RUNTIME_HASH = "2fca8b443c92510f1483a883f60061ad09b46b978b2631c807cd873a47ec260d"
+RUNTIME_SOURCE = f"https://github.com/AppImage/type2-runtime/tree/{RUNTIME_TAG}"
 
 
 def sha256(path):
@@ -36,12 +41,12 @@ def run(command, **kwargs):
 RUNTIME_FILES = (
     (
         "runtime-x86_64",
-        "https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-x86_64",
+        f"https://github.com/AppImage/type2-runtime/releases/download/{RUNTIME_TAG}/runtime-x86_64",
         RUNTIME_HASH,
     ),
     (
         "runtime-LICENSE",
-        "https://raw.githubusercontent.com/AppImage/type2-runtime/8f39b89/LICENSE",
+        f"https://raw.githubusercontent.com/AppImage/type2-runtime/{RUNTIME_COMMIT}/LICENSE",
         "aa154fc9070614bbe7921f89db11efd1dba7a1f3a41685958110e2230f9c0ca1",
     ),
 )

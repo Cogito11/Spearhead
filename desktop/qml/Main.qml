@@ -642,11 +642,57 @@ ApplicationWindow {
                                     width: parent.width
                                 }
                             }
+                            Rectangle {
+                                id: searchPill
+                                Layout.fillWidth: true
+                                Layout.maximumWidth: Theme.px(300)
+                                Layout.minimumWidth: Theme.px(120)
+                                Layout.preferredHeight: Theme.px(40)
+                                Layout.preferredWidth: Theme.px(300)
+                                border.color: searchInput.activeFocus ? Theme.primary : Theme.line
+                                color: Theme.bg
+                                objectName: "searchPill"
+                                radius: height / 2
+                                visible: backend.searchOpen
+
+                                NativeGlyph {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    height: width
+                                    name: "search"
+                                    width: Theme.px(18)
+                                    x: Theme.px(14)
+                                }
+                                SInput {
+                                    id: searchInput
+                                    anchors.fill: parent
+                                    font.pixelSize: Theme.px(14)
+                                    leftPadding: Theme.px(40)
+                                    objectName: "messageSearch"
+                                    placeholderText: "Search this conversation"
+                                    rightPadding: Theme.px(14)
+                                    text: backend.search
+
+                                    background: Item {
+                                    }
+
+                                    Keys.onEscapePressed: backend.searchOpen = false
+                                    onTextEdited: backend.search = text
+                                }
+                            }
                             IconButton {
+                                id: searchToggle
+                                Layout.preferredHeight: Theme.px(40)
+                                Layout.preferredWidth: Theme.px(40)
                                 objectName: "searchButton"
-                                selected: backend.searchOpen
-                                symbol: "search"
+                                symbol: backend.searchOpen ? "close" : "search"
                                 tip: backend.searchOpen ? "Close search" : "Search messages"
+
+                                // Same outline as the search bar beside it.
+                                background: Rectangle {
+                                    border.color: searchToggle.activeFocus && searchToggle.focusReason === Qt.TabFocusReason ? Theme.muted : Theme.line
+                                    color: searchToggle.hovered ? Theme.soft : Theme.bg
+                                    radius: width / 2
+                                }
 
                                 onClicked: {
                                     backend.searchOpen = !backend.searchOpen;
@@ -737,76 +783,6 @@ ApplicationWindow {
                             width: parent.width
                             wrapMode: Text.Wrap
                             y: Theme.px(48)
-                        }
-                    }
-                    Row {
-                        id: floatingSearch
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: chatHeader.bottom
-                        anchors.topMargin: Theme.px(16)
-                        objectName: "floatingSearch"
-                        spacing: Theme.px(8)
-                        visible: backend.searchOpen
-                        width: Math.min(Theme.px(480), parent.width - Theme.px(32))
-                        z: 10
-
-                        Rectangle {
-                            border.color: Theme.line
-                            color: Theme.surface
-                            height: Theme.px(48)
-                            objectName: "searchPill"
-                            radius: height / 2
-                            width: parent.width - Theme.px(52)
-
-                            SoftShadow {
-                                anchors.fill: parent
-                                rounding: parent.radius
-                                z: -1
-                            }
-                            NativeGlyph {
-                                anchors.verticalCenter: parent.verticalCenter
-                                height: width
-                                name: "search"
-                                width: Theme.px(20)
-                                x: Theme.px(16)
-                            }
-                            SInput {
-                                id: searchInput
-                                font.pixelSize: Theme.px(14)
-                                height: parent.height
-                                objectName: "messageSearch"
-                                placeholderText: "Search this conversation"
-                                text: backend.search
-                                width: parent.width - Theme.px(56)
-                                x: Theme.px(44)
-
-                                background: Item {
-                                }
-
-                                Keys.onEscapePressed: backend.searchOpen = false
-                                onTextEdited: backend.search = text
-                            }
-                        }
-                        IconButton {
-                            height: width
-                            objectName: "searchClose"
-                            symbol: "close"
-                            tip: "Close and clear search"
-                            width: Theme.px(44)
-
-                            background: Rectangle {
-                                border.color: Theme.line
-                                color: Theme.surface
-                                radius: width / 2
-
-                                SoftShadow {
-                                    anchors.fill: parent
-                                    rounding: parent.radius
-                                    z: -1
-                                }
-                            }
-
-                            onClicked: backend.searchOpen = false
                         }
                     }
                     SButton {

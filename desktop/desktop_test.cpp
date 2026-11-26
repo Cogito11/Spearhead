@@ -72,8 +72,8 @@ class DesktopTests : public QObject {
     QVERIFY(image.save(output + "/" + name + ".png"));
     QJsonObject geometry;
     for (auto objectName : {"brandLogo", "brandTitle", "nearbyIndicator", "sidebarSelector",
-                            "conversationHeader", "conversationTitle", "floatingSearch",
-                            "searchPill", "searchClose", "contactLabel", "networkScan"})
+                            "conversationHeader", "conversationTitle", "searchPill",
+                            "searchButton", "sendButton", "contactLabel", "networkScan"})
       if (auto item = qobject_cast<QQuickItem *>(view.find(objectName))) {
         if (!item->isVisible())
           continue;
@@ -190,9 +190,17 @@ private slots:
       view.bridge.select("bob-key");
       view.window->resize(520, 700);
       snapshot(view, "narrow-" + theme);
+      view.bridge.setSearchOpen(true);
+      view.bridge.setSearch("Thanks");
+      snapshot(view, "narrow-search-" + theme);
+      view.bridge.setSearchOpen(false);
       view.window->resize(1120, 760);
       view.bridge.setFontSize(140);
       snapshot(view, "scaled-" + theme);
+      view.bridge.setSearchOpen(true);
+      view.bridge.setSearch("Thanks");
+      snapshot(view, "scaled-search-" + theme);
+      view.bridge.setSearchOpen(false);
       view.bridge.setFontSize(100);
     }
     QVERIFY2(view.warnings.isEmpty(), qPrintable(view.warnings.join("\n")));
@@ -204,12 +212,27 @@ private slots:
     view.bridge.select("bob-key");
     QTRY_COMPARE(view.bridge.messages()->rowCount(), 4);
     view.bridge.setDraft("Keep my draft");
+    auto searchButton = view.find("searchButton");
+    auto searchPill = qobject_cast<QQuickItem *>(view.find("searchPill"));
+    auto messageSearch = qobject_cast<QQuickItem *>(view.find("messageSearch"));
+    QVERIFY(searchButton && searchPill && messageSearch);
+    QVERIFY(!searchPill->isVisible());
+    QCOMPARE(searchButton->property("symbol").toString(), QString("search"));
     view.click("searchButton");
     QTRY_VERIFY(view.bridge.searchOpen());
+    // The bar opens in the top bar, left of the button, which becomes a close button.
+    QTRY_VERIFY(searchPill->isVisible());
+    QVERIFY(messageSearch->hasActiveFocus());
+    QCOMPARE(searchButton->property("symbol").toString(), QString("close"));
+    auto buttonItem = qobject_cast<QQuickItem *>(searchButton);
+    QVERIFY(searchPill->mapToScene(QPointF(searchPill->width(), 0)).x() <=
+            buttonItem->mapToScene(QPointF(0, 0)).x());
     view.bridge.setSearch("Thanks");
     QCOMPARE(view.bridge.messages()->rowCount(), 2);
     view.click("searchButton");
     QTRY_VERIFY(!view.bridge.searchOpen());
+    QTRY_VERIFY(!searchPill->isVisible());
+    QCOMPARE(searchButton->property("symbol").toString(), QString("search"));
     QCOMPARE(view.bridge.search(), QString());
     QCOMPARE(view.bridge.messages()->rowCount(), 4);
     QCOMPARE(view.bridge.draft(), QString("Keep my draft"));

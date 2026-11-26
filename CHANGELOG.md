@@ -1,5 +1,14 @@
 # Changes
 
+## Unreleased
+
+- Move message search into the conversation top bar: the search field opens to
+  the left of the search button, which becomes a close (×) button while open.
+- Outline the search/close button to match the search field.
+- Use an up arrow for the send button.
+- Fix the release build by pinning the AppImage runtime to the immutable
+  `20251108` upstream release instead of the overwritten `continuous` build.
+
 ## 0.3.4
 
 - Toggle conversation search with its toolbar button, and close the sidebar menu

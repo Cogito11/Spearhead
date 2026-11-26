@@ -49,7 +49,7 @@ Qt models, native controls, every migrated action, file integrity, read-once
 privacy, pending-action races, RAM session restoration and repeated logo painting
 are exercised through isolated local fixtures. Edge gestures at both ends of lists
 and dialogs verify the subtle bounce and return, while contact-refresh and network
-context-menu regressions verify detail navigation. Twenty-six light/dark scenes include
+context-menu regressions verify detail navigation. Thirty light/dark scenes include
 chat, picker, search, context menu, settings, contacts, network, narrow and scaled
 views, including fractional text scales in Settings. The packaged runtime repeats the same tests. Qt library origins, exact
 rendered-pixel hashes and geometry must match the native source reference.
